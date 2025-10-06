@@ -204,9 +204,10 @@ export default function Home() {
   const fetchProblemHistory = async () => {
     setIsLoadingHistory(true);
     try {
-      const response = await fetch('/api/math-problem/history',{
+      const response = await fetch(`/api/math-problem/history?t=${Date.now()}`, {
         cache: 'no-cache' 
       });
+      
       if (!response.ok) throw new Error('Failed to fetch history');
       
       const data = await response.json();
@@ -224,7 +225,7 @@ export default function Home() {
   const fetchInitialScore = async () => {
     try {
       setIsLoadingScore(true);
-      const response = await fetch('/api/math-problem/score',{
+      const response = await fetch(`/api/math-problem/score?t=${Date.now()}`, {
         cache: 'no-cache' 
       });
       if (response.ok) {
