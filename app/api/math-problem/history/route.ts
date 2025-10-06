@@ -74,7 +74,14 @@ export async function GET(request: NextRequest) {
         current_streak: streak,
         display_note: "Showing latest 50 problems from your history" 
       }
-    });
+    },
+  {
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'CDN-Cache-Control': 'no-cache',
+      'Vercel-CDN-Cache-Control': 'no-cache'
+    }
+  });
 
   } catch (error) {
     console.error('Error fetching problem history:', error);

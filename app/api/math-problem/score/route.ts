@@ -16,6 +16,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       total_score: totalScore,
       correct_answers: correctAnswers || 0
+    }, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'CDN-Cache-Control': 'no-cache',
+        'Vercel-CDN-Cache-Control': 'no-cache'
+      }
     });
 
   } catch (error) {

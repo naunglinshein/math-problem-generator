@@ -126,9 +126,7 @@ export default function Home() {
       setIsCorrect(result.is_correct)
 
       // Update total score
-      if (result.score) {
-        setTotalScore(prev => prev + result.score);
-      }
+      await fetchInitialScore();
     } catch (err) {
       console.error('Error submitting answer:', err)
       toast.error('Failed to submit answer')
@@ -206,7 +204,9 @@ export default function Home() {
   const fetchProblemHistory = async () => {
     setIsLoadingHistory(true);
     try {
-      const response = await fetch('/api/math-problem/history');
+      const response = await fetch('/api/math-problem/history',{
+        cache: 'no-cache' 
+      });
       if (!response.ok) throw new Error('Failed to fetch history');
       
       const data = await response.json();
@@ -224,7 +224,9 @@ export default function Home() {
   const fetchInitialScore = async () => {
     try {
       setIsLoadingScore(true);
-      const response = await fetch('/api/math-problem/score');
+      const response = await fetch('/api/math-problem/score',{
+        cache: 'no-cache' 
+      });
       if (response.ok) {
         const data = await response.json();
         setTotalScore(data.total_score);
@@ -248,7 +250,19 @@ export default function Home() {
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-gray-800">Your Math Journey</h2>
                 <button
-                  onClick={() => setShowHistory(false)}
+                  onClick={() => {
+                    setShowHistory(false);
+                    // CLEAR data when modal closes
+                    setProblemHistory([]);
+                    setStatistics({
+                      total_problems: 0,
+                      correct_answers: 0,
+                      accuracy: 0,
+                      total_score: 0,
+                      current_streak: 0,
+                      display_note: '',
+                    });
+                  }}
                   className="text-gray-500 hover:text-gray-700 text-2xl"
                 >
                   ×
@@ -363,7 +377,7 @@ export default function Home() {
               id="difficulty"
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
             >
               <option value="random">Random</option>
               <option value="easy">Easy</option>
@@ -381,7 +395,7 @@ export default function Home() {
               id="problem-type"
               value={problemType}
               onChange={(e) => setProblemType(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
             >
               <option value="random">Random</option>
               <option value="addition">Addition</option>
@@ -420,7 +434,7 @@ export default function Home() {
                   id="answer"
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   placeholder="Enter your answer"
                   required
                 />
